@@ -20,11 +20,64 @@ export default class Login extends React.Component{
         super(props);
         this.state={
             isLoading:true,
-            error:null,
+            error:"",
             email: "",
             password:""
         }
+        this.handleChange=this.handleChange.bind(this)
+        this.handleSubmit=this.handleSubmit.bind(this)
     }
+
+     //change
+     handleChange(event){
+        this.setState({
+            [event.target.name]:event.target.value
+        })
+    }
+    //loading
+    componentDidMount(){
+        if(localStorage.getItem(LoginString.ID)){
+            this.setState({isLoading:false}, ()=>{
+                this.setState({isLoading:false})
+                this.props.showToast(1,'Login success')
+                this.props.history.push('/chat')
+            })
+        }else{
+            this.setState({isLoading:false})
+        }
+    }
+    async handleSubmit(event){
+        event.preventDefault();
+        this.setState({error:""});
+        await firebase.auth().signInWithEmailAndPassword(this.state.email,this.state.password)
+        .then(async result=>{
+            let user=result.user;
+            if(user){
+                await firebase.firestore().collection('users')
+                .where('id', "==",user.uid)
+                .get()
+                .then(function(querySnapshot){
+                    querySnapshot.forEach(function(doc){
+                        const currentdata=doc.data();
+                        localStorage.setItem(LoginString.FirebaseDocumentId, doc.id);
+                        localStorage.setItem(LoginString.ID,currentdata.id);
+                        localStorage.setItem(LoginString.Name,currentdata.name);
+                        localStorage.setItem(LoginString.Email,currentdata.email);
+                        localStorage.setItem(LoginString.Password,currentdata.password);
+                        localStorage.setItem(LoginString.PhotoURL,currentdata.URL);
+                        localStorage.setItem(LoginString.Description,currentdata.description);
+                    })
+                })
+                
+            }
+            this.props.history.push('/chat')
+        }).catch(function(){
+            this.setState({
+                error:"Error while singning in please try again"
+            })
+        })
+    }
+    
     render(){
         const paper={
             display:'flex',
@@ -105,12 +158,12 @@ export default class Login extends React.Component{
                         name="email"
                         autoComplete="email"
                         autoFocus
-                        onChange={this.handlechange}
+                        onChange={this.handleChange}
                         value={this.state.email}
                     />
 
                     
-                0.<TextField
+                <TextField
                         variant="outlined"
                         margin="normal"
                         required
@@ -121,9 +174,33 @@ export default class Login extends React.Component{
                         type="password"
                         autoComplete="current-password"
                         autoFocus
-                        onChange={this.handlechange}
+                        onChange={this.handleChange}
                         value={this.state.password}
                     />
+                    <FormControlLabel
+                        control={<Checkbox value="remember" color="primary"/>}
+                        label="Remember me"
+                    />
+                    <Typography component="h6" variant="h5">
+                        {this.state.error ?(
+                            <p className="text-danger">{this.state.error}</p>
+                        ):null}
+                    </Typography>
+                   
+                        <div className="CenterAliningItems">
+                            <button className="button1" type="submit">
+                            <span>Login In</span>
+
+                            </button>
+                        </div>
+
+                        <div className="CenterAliningItems">
+                            <p>Don't have and Account?</p>
+                            <Link to="/signup" variant="body2">
+                                Sign In
+                            </Link>
+                        </div>
+              
 
                </form>
 
