@@ -90,13 +90,15 @@ export default class SignUp extends Component{
                 <Card style={Signinsee}>
                   <div>
                       <Typography component="h1" variant="h5">
-                          Sign Up 
-                          To
+                          Sign Up To
                       </Typography>
                   </div>
                   <div>
                       <Link to="/">
-                          <button class="customhandlefile"><i class="fa fa-home"></i>WebChat</button>
+                          <button class="btn">
+                          <i class="fa fa-home"></i>
+                          WebChat
+                          </button>
                       </Link>
                   </div>
 
