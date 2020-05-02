@@ -164,7 +164,7 @@ export default class Profile extends React.Component{
                     SAVE
                 </button>
                 <button className="btnback" onClick={()=>{this.props.history.push('/chat')}}>
-                    SAVE
+                    BACK
                 </button>
             </div>
             {this.state.isLoading ?(

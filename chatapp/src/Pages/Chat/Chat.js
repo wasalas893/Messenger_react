@@ -136,10 +136,22 @@ export default class Chat extends React.Component{
     }
 
     renderListUser=()=>{
+       
+    }
+    searchHandler=(event)=>{
+        let searchQuery=event.target.value.toLowerCase(),
+        displayedContacts=this.searchUsers.filter((el)=>{
+            let SearchValue=el.name.toLowerCase();
+            return SearchValue.indexOf(searchQuery)!==-1;
+        })
+        this.displayedContacts=displayedContacts
+        this.displaySearchedContacts()
+    }
+    displaySearchedContacts=()=>{
         if(this.searchUsers.length>0){
             let viewListUser=[]
             let classname=""
-            this.searchUsers.map((item)=>{
+            this.displayedContacts.map((item)=>{
                 if(item.id!=this.currentUserId){
                     classname=this.getClassnameforUserandNotification(item.id)
                     viewListUser.push(
@@ -179,6 +191,7 @@ export default class Chat extends React.Component{
         }else{
           console.log("no user is present")
         }
+
     }
     render(){
         return(
@@ -194,11 +207,23 @@ export default class Chat extends React.Component{
                         onClick={this.onProfileClick}
                     />
                     <button className="Logout" onClick={this.logout}>Logout</button>
+                    </div>
+                    <div className="rootsearchbar">
+                        <div className="input-container">
+                        <i class="fa fa-search icon"></i>
+                        <input class="input-field"
+                            type="text"
+                            onChange={this.searchHandler}
+                            placeholder="Search"
+                        />
 
+                        
+
+                        </div>
                     </div>
                     {this.state.displayedContacts}
                 </div>
-               <div className="viewBoard">
+                <div className="viewBoard">
                    {this.state.currentPeerUser ?(
                            <ChatBox/>):(<WelcomeBoard
                                currentUserName={this.currentUserName}
