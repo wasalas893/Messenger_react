@@ -32,7 +32,82 @@ export default class Profile extends React.Component{
           name:event.target.value
       })
     }
-    
+    //About Me
+    onChangeAboutMe=(event)=>{
+       this.setState({
+           aboutMe:event.target.value
+       })
+    }
+    //Avatar
+    onChangeAvatar=(event)=>{
+        if(event.target.files && event.target.files[0]){
+            const prefixFiletype=event.target.files[0].type.toString()
+            if(prefixFiletype.indexOf(LoginString.PREFIX_IMAGE)!==0){
+                this.props.showToast(0,"This file is not an image")
+                return
+            }
+            this.newPhoto=event.target.files[0]
+            this.setState({photoUrl:URL.createObjectURL(event.target.files[0])})
+        }else{
+            this.props.showToast(0,"Something wrong with input file")
+        }
+    }
+    uploadAvatar=()=>{
+       
+        this.setState({isLoading:true})
+        if(this.newPhoto){
+            const uploadTask=firebase.storage()
+            .ref()
+            .child(this.state.id)
+            .put(this.newPhoto)
+            uploadTask.on(
+                LoginString.UPLOAD_CHANGED,
+                null,
+                err=>{
+                    this.props.showToast(0,err.message)
+                },
+                ()=>{
+                    uploadTask.snapshot.ref.getDownloadURL().then(downloadURL=>{
+                        this.updateUserInfo(true,downloadURL)
+                       
+                    })
+                }
+
+            )
+        }else{
+            this.updateUserInfo(false,null)
+        }
+    }
+    updateUserInfo=(isUpdatedPhotoURL,downloadURL)=>{
+        let newinfo
+      
+        if(isUpdatedPhotoURL){
+            newinfo={
+                name:this.state.name,
+                Description:this.state.aboutMe,
+                URL:downloadURL
+            }
+            firebase.firestore().collection('users')
+            .doc(this.state.documentKey)
+            .update(newinfo)
+            .then(data=>{
+                localStorage.setItem(LoginString.Name,this.state.name)
+                localStorage.setItem(LoginString.Description,this.state.aboutMe)
+                if(isUpdatedPhotoURL){
+                    localStorage.setItem(LoginString.PhotoURL,downloadURL)
+                }
+                this.setState({isLoading:false})
+                this.props.showToast(1,'Update info success')
+            })
+          
+        }else{
+            newinfo={
+                name:this.state.name,
+                Description:this.state.aboutMe
+            }
+        }
+    }
+
     render(){
         return(
             <div className="profileroot">

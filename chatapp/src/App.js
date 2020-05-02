@@ -29,7 +29,7 @@ render(){
         <ToastContainer 
           autoClose={2000}
           hideProgressBar={true}
-          position={toast.POSITION.BOTTOM_CENTER}
+          position={toast.POSITION.TOP_CENTER}
         />
         <Switch>
           <Route exact path="/" render={props=><Home {...props}/>}/>
