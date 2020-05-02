@@ -51,7 +51,7 @@
     align-self: center;
     margin-top: 50px;
     object-fit: cover;
-    background-image: url(../../images/Nopic.jpg);
+    background-image: url(../../images/default_profile.jpg);
 }
 
 .textLabel {
