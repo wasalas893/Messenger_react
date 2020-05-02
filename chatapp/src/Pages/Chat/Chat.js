@@ -3,6 +3,8 @@ import LoginString from '../Login/LoginStrings';
 import firebase from "../../Services/firebase";
 import './Chat.css';
 import ReactLoading from 'react-loading';
+import ChatBox from '../ChatBox/ChatBox';
+import WelcomeBoard from '../Welcome/Welcome';
 
 
 
@@ -72,9 +74,10 @@ export default class Chat extends React.Component{
                       name:item.data().name,
                       messages:item.data().messages,
                       URL:item.data().URL,
-                      description:item.data().description
+                      Description:item.data().description
                   }
               )
+              console.log(item.description)
             })
             this.setState({
                 isLoading:false
@@ -195,6 +198,15 @@ export default class Chat extends React.Component{
                     </div>
                     {this.state.displayedContacts}
                 </div>
+               <div className="viewBoard">
+                   {this.state.currentPeerUser ?(
+                           <ChatBox/>):(<WelcomeBoard
+                               currentUserName={this.currentUserName}
+                               currentUserPhoto={this.currentUserPhoto}
+                           />)
+                }
+               </div>
+
             </div>
                
             </div>

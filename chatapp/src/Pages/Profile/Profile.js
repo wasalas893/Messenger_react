@@ -105,6 +105,18 @@ export default class Profile extends React.Component{
                 name:this.state.name,
                 Description:this.state.aboutMe
             }
+            firebase.firestore().collection('users')
+            .doc(this.state.documentKey)
+            .update(newinfo)
+            .then(data=>{
+                localStorage.setItem(LoginString.Name,this.state.name)
+                localStorage.setItem(LoginString.Description,this.state.aboutMe)
+                if(isUpdatedPhotoURL){
+                    localStorage.setItem(LoginString.PhotoURL,downloadURL)
+                }
+                this.setState({isLoading:false})
+                this.props.showToast(1,'Update info success')
+            })
         }
     }
 

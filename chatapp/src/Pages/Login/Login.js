@@ -65,7 +65,7 @@ export default class Login extends React.Component{
                         localStorage.setItem(LoginString.Email,currentdata.email);
                         localStorage.setItem(LoginString.Password,currentdata.password);
                         localStorage.setItem(LoginString.PhotoURL,currentdata.URL);
-                        localStorage.setItem(LoginString.Description,currentdata.description);
+                        localStorage.setItem(LoginString.Description,currentdata.Description);
                     })
                 })
                 

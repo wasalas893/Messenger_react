@@ -139,7 +139,7 @@
 .viewListUser {
     overflow-y: scroll;
     max-height: 100vh;
-    min-height: 90vh;
+    min-height: 50vh;
     height: auto;
     /* padding-top: 10px; */
     /* padding-bottom: 10px; */
