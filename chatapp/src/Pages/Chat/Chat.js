@@ -74,7 +74,7 @@ export default class Chat extends React.Component{
                       name:item.data().name,
                       messages:item.data().messages,
                       URL:item.data().URL,
-                      Description:item.data().description
+                      Description:item.data().Description
                   }
               )
               console.log(item.description)
@@ -225,7 +225,10 @@ export default class Chat extends React.Component{
                 </div>
                 <div className="viewBoard">
                    {this.state.currentPeerUser ?(
-                           <ChatBox/>):(<WelcomeBoard
+                           <ChatBox 
+                               currentPeerUser={this.state.currentPeerUser}
+                               showToast={this.props.showToast}
+                           />):(<WelcomeBoard
                                currentUserName={this.currentUserName}
                                currentUserPhoto={this.currentUserPhoto}
                            />)
