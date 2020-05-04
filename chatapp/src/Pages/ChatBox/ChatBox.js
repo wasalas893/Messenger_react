@@ -4,7 +4,7 @@ import ReactLoading from 'react-loading';
 import 'react-toastify/dist/ReactToastify.css';
 import firebase from '../../Services/firebase';
 import images from '../../ProjectImages/ProjectImages';
-import moment from 'react-moment';
+import moment from 'moment';
 import './ChatBox.css';
 import LoginString from '../Login/LoginStrings';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -49,36 +49,39 @@ export default class ChatBox extends React.Component{
       componentDidMount(){
            this.getListHistory()
       }
+      componentWillUnmount(){
+          if(this.removeListener){
+              this.removeListener()
+          }
+      }
       getListHistory=()=>{
+        if(this.removeListener){
+            this.removeListener()
+        }
           this.listMessage.length=0
           this.setState({isLoading:true})
-
-        //   if(
-        //       this.hashString(this.currentUserId) <=
-        //       this.hashString(this.currentPeerUser.id)
-        //   ){
-        //       this.groupChatId=`${this.currentUserId}-${this.currentPeerUser.id}`
-        //   }else{
-        //       this.groupChatId=`${this.currentPeerUser.id}-${this.currentUserId}`
-        //   }
-          
-          //Get history listen new data added
-        //   this.removeListener=firebase.firestore()
-        //   .collection('Messages')
-        //   .doc(this.groupChatId)
-        //   .collection(this.groupChatId)
-        //   .onSnapshot(Snapshot=>{
-        //       Snapshot.docChanges().forEach(change=>{
-        //           if(change.type===LoginString.DOC){
-        //               this.listMessage.push(change.doc.data())
-        //           }
-        //       })
-        //       this.setState({isLoading:false})
-        //   }),
-        //   err=>{
-        //       this.props.showToast(0,err.toString())
-        //   }
-
+          if(
+              this.hashString(this.currentUserId)<=
+              this.hashString(this.currentPeerUser.id)
+          ){
+              this.groupChatId=`${this.currentUserId}-${this.currentPeerUser.id}`
+          }else{
+              this.groupChatId=`${this.currentPeerUser.id}-${this.currentUserId}`
+          }
+         //get history
+         this.removeListener=firebase.firestore()
+         .collection('Messages')
+         .doc(this.groupChatId)
+         .collection(this.groupChatId)
+         .onSnapshot(Snapshot=>{
+             Snapshot.docChanges().forEach(change=>{
+                 if(change.type===LoginString.DOC){
+                     this.listMessage.push(change.doc.data())
+                 }
+             })
+             this.setState({isLoading:false})
+         })
+         
       }
       onSendMessage=(content, type)=>{
           let notificationMessages=[]
@@ -91,6 +94,7 @@ export default class ChatBox extends React.Component{
           const timestamp=moment()
           .valueOf()
           toString()
+
 
           const itemMessage={
               idFrom:this.currentUserId,
@@ -241,7 +245,7 @@ export default class ChatBox extends React.Component{
                                 <img
                                   className="imgItemRight"
                                   src={item.content}
-                                  alt="Please update your image"
+                                  alt=""
                                  />
                             </div>
                         )
@@ -286,10 +290,84 @@ export default class ChatBox extends React.Component{
                            </div>
                        )
                    }else if(item.type===1){
-                       
+                    viewListMessage.push(
+                        <div className="viewWrapItemLeft2" key={item.timestamp}>
+                            <div className="viewWrapItemLeft3">
+                                  {this.isLastMessageLeft(index)?(
+                                     <img
+                                    src={this.currentPeerUser.URL}
+                                    alt="avatar"
+                                    className="peerAvatarLeft"
+                                   />
+                                   ):(
+                                   <div className="viewPaddingLeft"/>
+                            )}
+                            <div className="viewItemLeft2">
+                                  <img 
+                                      src={item.content}
+                                      alt="content message"
+                                      className="imgItemLeft"
+                                  />
+                            </div>
+                            </div>
+                            {this.isLastMessageLeft(index)?(
+                                   <span className="textTimeLeft">
+                                       <div className="time">
+                                           {moment(Number(item.timestamp)).formate('11')}
+                                       </div>
+                                   </span>
+                               ):null}
+                        </div>    
+
+                    )   
+                   }else{
+                       viewListMessage.push(
+
+                        <div className="viewWrapItemLeft2" key={item.timestamp}>
+                           <div className="viewWrapItemLeft3">
+                              {this.isLastMessageLeft(index)?(
+                                 <img
+                                src={this.currentPeerUser.URL}
+                                alt="avatar"
+                                className="peerAvatarLeft"
+                               />
+                               ):(
+                               <div className="viewPaddingLeft"/>
+                              )}
+                              <div className="viewItemLeft3" key={item.timestamp}>
+                              <img
+                                    className="imgItemRight"
+                                    src={this.getGifImage(item.content)}
+                                    alt="content message"
+                                />
+                              </div>
+                            </div>
+                            {this.isLastMessageLeft(index)?(
+                                   <span className="textTimeLeft">
+                                       <div className="time">
+                                           {moment(Number(item.timestamp)).formate('11')}
+                                       </div>
+                                   </span>
+                               ):null}
+                        </div>      
+
+
+                       )
                    }
                 }
             })
+            return viewListMessage
+        }else{
+            return(
+                <div className="viewWrapSayHi">
+                    <span className="textSayHi">Say hi to new friend</span>
+                    <img
+                        className="imgWaveHand"
+                        src={images.wave_hand}
+                        alt="wave hand"
+                    />
+                </div>
+            )
         }
     }
     renderStickers=()=>{
@@ -376,6 +454,46 @@ export default class ChatBox extends React.Component{
 
             </div>
         )
+    }
+    getGifImage=value=>{
+        switch(value){
+            case 'lego1':
+                return images.lego1
+                case 'lego1':
+                    return images.lego1
+                    case 'lego2':
+                        return images.lego2
+                        case 'lego3':
+                            return images.lego3
+                            case 'lego4':
+                                return images.lego4
+                                case 'lego5':
+                                    return images.lego5
+                                    case 'lego6':
+                                        return images.lego6
+                                        case 'lego7':
+                                            return images.lego7 
+            case 'mimi1':
+                return images.mimi1 
+                case 'mimi2':
+                    return images.mimi2 
+                    case 'mimi3':
+                        return images.mimi3
+                        case 'mimi4':
+                            return images.mimi4
+                            case 'mimi5':
+                                return images.mimi5
+                                case 'mimi6':
+                                    return images.mimi6
+                                    case 'mimi7':
+                                        return images.mimi7
+                                        case 'mimi8':
+                                            return images.mimi8
+                                            case 'mimi9':
+                                                return images.mimi9
+                                            default:
+                                                return null                                                                                                         
+        }
     }
     hashString=str=>{
         let hash=0

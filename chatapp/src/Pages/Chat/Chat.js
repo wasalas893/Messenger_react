@@ -77,7 +77,7 @@ export default class Chat extends React.Component{
                       Description:item.data().Description
                   }
               )
-              console.log(item.description)
+             // console.log(item.description)
             })
             this.setState({
                 isLoading:false
