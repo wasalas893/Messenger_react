@@ -4,6 +4,7 @@ const Images={
    choosefile:require('../images/images.png'),
    input_file: require('../images/file.jpg'),
    sticker:require('../images/sticker.jpg'),
+   send:require('../images/send.png'),
 
    lego1:require('../images/lego1.jpg'),
    lego2:require('../images/lego2.jpg'),
@@ -17,6 +18,10 @@ const Images={
    mimi3:require('../images/mimi3.png'),
    mimi4:require('../images/mimi4.png'),
    mimi5:require('../images/mimi5.png'),
+   mimi6:require('../images/mimi6.gif'),
+   mimi7:require('../images/mimi7.gif'),
+   mimi8:require('../images/mimi8.gif'),
+   mimi9:require('../images/mimi9.gif'),
    
 }
 export default Images;
