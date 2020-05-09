@@ -4,7 +4,7 @@ import ReactLoading from 'react-loading';
 import 'react-toastify/dist/ReactToastify.css';
 import firebase from '../../Services/firebase';
 import images from '../../ProjectImages/ProjectImages';
-import moment from 'moment';
+import Moment from 'react-moment';
 import './ChatBox.css';
 import LoginString from '../Login/LoginStrings';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -19,6 +19,7 @@ export default class ChatBox extends React.Component{
               isLoading:false,
               isShowStiker:false,
               inputValue:""
+              //comment this page
           }
           this.currentUserName=localStorage.getItem(LoginString.Name);
           this.currentUserId=localStorage.getItem(LoginString.ID);
@@ -32,7 +33,7 @@ export default class ChatBox extends React.Component{
           this.removeListener=null;
           this.currentPhotoFile=null;
 
-        //   firebase.firestore().collection('users').doc(this.currentPeerUser.documentkey).get()
+        //   firebase.firestore().collection('Messages').doc(this.currentPeerUser.documentkey).get()
         //   .then((docRef)=>{
         //       this.currentPeerUserMessages=docRef.data().messages
         //   })
@@ -85,14 +86,13 @@ export default class ChatBox extends React.Component{
       }
       onSendMessage=(content, type)=>{
           let notificationMessages=[]
-          if(this.state.isShowStiker && type === 2){
+          if(this.state.isShowStiker && type===2){
               this.setState({isShowStiker:false})
           }
-          if(content.trim() ===''){
+          if(content.trim()===''){
               return
           }
-          const timestamp=moment()
-          .valueOf()
+          const timestamp=Moment().valueOf() 
           toString()
 
 
@@ -211,7 +211,7 @@ export default class ChatBox extends React.Component{
                    className="icSend"
                    src={images.send}
                    alt="icon send"
-                   onClick={()=>{this.onSendMessage(this.state.inputValue,0)}}
+                   onClick={()=>this.onSendMessage(this.state.inputValue, 0)}
                />
 
              </div>
@@ -283,7 +283,7 @@ export default class ChatBox extends React.Component{
                                {this.isLastMessageLeft(index)?(
                                    <span className="textTimeLeft">
                                        <div className="time">
-                                           {moment(Number(item.timestamp)).formate('11')}
+                                           {Moment(Number(item.timestamp)).formate('11')}
                                        </div>
                                    </span>
                                ):null}
@@ -313,7 +313,7 @@ export default class ChatBox extends React.Component{
                             {this.isLastMessageLeft(index)?(
                                    <span className="textTimeLeft">
                                        <div className="time">
-                                           {moment(Number(item.timestamp)).formate('11')}
+                                           {Moment(Number(item.timestamp)).formate('11')}
                                        </div>
                                    </span>
                                ):null}
@@ -345,7 +345,7 @@ export default class ChatBox extends React.Component{
                             {this.isLastMessageLeft(index)?(
                                    <span className="textTimeLeft">
                                        <div className="time">
-                                           {moment(Number(item.timestamp)).formate('11')}
+                                           {Moment(Number(item.timestamp)).formate('11')}
                                        </div>
                                    </span>
                                ):null}
